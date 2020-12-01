@@ -1,0 +1,15 @@
+micronaut:
+  application:
+    name: kafka
+datasources:
+  default:
+    url: jdbc:postgresql://localhost:5432/postgres
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: '123456'
+jpa.default.properties.hibernate.hbm2ddl.auto: update
+kafka:
+  bootstrap:
+    servers: localhost:9092
+  topic:
+    product: 'meu-topico-legal'
