@@ -15,7 +15,7 @@ class UserServiceImpl(private val repository: UserRepository,
     override fun create(dto: UserDto): UserCreateResponse {
         var userEntity = builder.buildUser(dto)
         userEntity = repository.save(userEntity)
-
+        publishUserCreated(userEntity)
 
         return builder.buildCreateResponse(userEntity)
     }

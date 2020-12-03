@@ -21,7 +21,7 @@ class GrpcEntrypoint(private val service: UserService)
     }
 
     override fun createUser(request: UserCreateRequest, responseObserver: StreamObserver<UserCreateResponse>) {
-        log.info("Publishing user create request to kafka")
+        log.info("Creating user")
         val userDto = UserDto(email = request.email, name = request.name)
         responseObserver.onNext(service.create(userDto))
         responseObserver.onCompleted()
