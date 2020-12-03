@@ -8,13 +8,16 @@ option objc_class_prefix = "HLW";
 package com.felipepossari;
 
 service KafkaService {
-  rpc send (KafkaRequest) returns (KafkaReply) {}
+  rpc createUser (UserCreateRequest) returns (UserCreateResponse) {}
 }
 
-message KafkaRequest {
+message UserCreateRequest{
   string name = 1;
+  string email = 2;
 }
 
-message KafkaReply {
-  string message = 1;
+message UserCreateResponse{
+  int64 id = 1;
+  string name = 2;
+  string email = 3;
 }
