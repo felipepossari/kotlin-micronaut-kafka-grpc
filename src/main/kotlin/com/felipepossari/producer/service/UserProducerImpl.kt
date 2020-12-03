@@ -2,13 +2,16 @@ package com.felipepossari.producer.service
 
 import com.felipepossari.persistence.model.UserEntity
 import com.felipepossari.producer.model.UserMessage
+import io.micronaut.configuration.kafka.annotation.KafkaClient
+import org.apache.kafka.clients.producer.Producer
+import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import javax.inject.Singleton
 
 @Singleton
-class UserProducerImpl(val userTopic: String,
-                       val userKafkaClient: UserKafkaClient) : UserProducer {
+class UserProducerImpl(private val userTopic: String,
+                       @KafkaClient private val producer: Producer<String, UserMessage>) : UserProducer {
 
     companion object {
         val log: Logger = LoggerFactory.getLogger("ProductProducerHelper")
@@ -16,7 +19,7 @@ class UserProducerImpl(val userTopic: String,
 
     override fun sendMessage(message: UserMessage): Boolean {
         log.info("Sending message to kafka. User Id = ${message.id}")
-        userKafkaClient.sendMessage(userTopic, message.id.toString(), message)
+        producer.send(ProducerRecord(userTopic, message.id.toString(), message))
         return true
     }
 
