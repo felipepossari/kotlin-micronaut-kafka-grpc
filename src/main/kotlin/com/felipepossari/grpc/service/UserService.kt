@@ -1,7 +1,7 @@
-package com.felipepossari.service
+package com.felipepossari.grpc.service
 
 import com.felipepossari.UserCreateResponse
-import com.felipepossari.model.UserDto
+import com.felipepossari.grpc.model.UserDto
 
 interface UserService {
 

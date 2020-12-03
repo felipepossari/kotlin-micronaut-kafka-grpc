@@ -1,4 +1,4 @@
-package com.felipepossari.model
+package com.felipepossari.grpc.model
 
 data class UserDto(val id: Long? = null,
                    val name: String,

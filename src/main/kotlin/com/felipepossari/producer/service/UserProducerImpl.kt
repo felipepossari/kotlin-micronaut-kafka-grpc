@@ -18,8 +18,13 @@ class UserProducerImpl(private val userTopic: String,
     }
 
     override fun sendMessage(message: UserMessage): Boolean {
-        log.info("Sending message to kafka. User Id = ${message.id}")
-        producer.send(ProducerRecord(userTopic, message.id.toString(), message))
+        try {
+            log.info("Sending message to kafka. User Id = ${message.id}")
+            producer.send(ProducerRecord(userTopic, message.id.toString(), message))
+        } catch (ex: Exception){
+            log.error("Error: ", ex)
+            return false
+        }
         return true
     }
 

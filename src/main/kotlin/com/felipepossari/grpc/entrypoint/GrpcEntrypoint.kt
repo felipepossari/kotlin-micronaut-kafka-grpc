@@ -1,12 +1,10 @@
-package com.felipepossari.entrypoint
+package com.felipepossari.grpc.entrypoint
 
 import com.felipepossari.KafkaServiceGrpc
 import com.felipepossari.UserCreateRequest
 import com.felipepossari.UserCreateResponse
-import com.felipepossari.model.UserDto
-import com.felipepossari.persistence.model.UserEntity
-import com.felipepossari.producer.service.UserProducer
-import com.felipepossari.service.UserService
+import com.felipepossari.grpc.model.UserDto
+import com.felipepossari.grpc.service.UserService
 import io.grpc.stub.StreamObserver
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
