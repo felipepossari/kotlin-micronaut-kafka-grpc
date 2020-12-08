@@ -19,8 +19,8 @@ class UserServiceImpl(private val repository: UserRepository,
         return builder.buildCreateResponse(userEntity)
     }
 
-    private fun publishUserCreated(user : UserEntity){
-        val message = producer.createMessage(user)
-        producer.sendMessage(message)
+    private fun publishUserCreated(user: UserEntity) {
+        val message = producer.createUserCreatedMessage(user)
+        producer.sendMessage(message, user)
     }
 }
