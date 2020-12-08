@@ -5,7 +5,9 @@ import com.felipepossari.producer.model.UserMessage
 
 interface UserProducer {
 
-    fun sendMessage(message: UserMessage): Boolean
+    fun sendMessage(message: String, user: UserEntity): Boolean
 
-    fun createMessage(user: UserEntity) : UserMessage
+    fun createUserCreatedMessage(user: UserEntity): String
+    fun createUserUpdatedMessage(user: UserEntity): String
+    fun createUserDeletedMessage(user: UserEntity): String
 }

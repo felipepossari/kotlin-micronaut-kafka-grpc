@@ -1,35 +1,60 @@
 package com.felipepossari.producer.service
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.felipepossari.persistence.model.UserEntity
+import com.felipepossari.producer.model.EntityType
+import com.felipepossari.producer.model.EventType
+import com.felipepossari.producer.model.EventType.*
 import com.felipepossari.producer.model.UserMessage
 import io.micronaut.configuration.kafka.annotation.KafkaClient
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.time.Instant
 import javax.inject.Singleton
 
 @Singleton
 class UserProducerImpl(private val userTopic: String,
-                       @KafkaClient private val producer: Producer<String, UserMessage>) : UserProducer {
+                       private val builder: UserProducerBuilder,
+                       private val parser: UserProducerParser,
+                       @KafkaClient private val producer: Producer<String, String>) : UserProducer {
 
     companion object {
         val log: Logger = LoggerFactory.getLogger("ProductProducerHelper")
     }
 
-    override fun sendMessage(message: UserMessage): Boolean {
+    override fun sendMessage(message: String, user: UserEntity): Boolean {
         try {
-            log.info("Sending message to kafka. User Id = ${message.id}")
-            producer.send(ProducerRecord(userTopic, message.id.toString(), message))
-        } catch (ex: Exception){
+            log.info("Sending message to kafka. User Id = ${user.id}")
+            producer.send(ProducerRecord(userTopic, user.id.toString(), message))
+        } catch (ex: Exception) {
             log.error("Error: ", ex)
             return false
         }
         return true
     }
 
-    override fun createMessage(user: UserEntity): UserMessage =
-            UserMessage(id = user.id!!,
-                    name = user.name,
-                    email = user.email)
+    override fun createUserCreatedMessage(user: UserEntity): String {
+        return createTopicMessage(user, CREATED)
+    }
+
+    override fun createUserUpdatedMessage(user: UserEntity): String {
+        return createTopicMessage(user, UPDATE)
+    }
+
+    override fun createUserDeletedMessage(user: UserEntity): String {
+        return createTopicMessage(user, DELETED)
+    }
+
+    private fun createTopicMessage(user: UserEntity, eventType: EventType): String{
+        val userMessage = builder.buildUserMessage(user)
+        val topicMessage = builder.builTopicMessage(parser.parseUserMessage(userMessage),
+                EntityType.USER,
+                eventType,
+                Instant.now().toEpochMilli())
+        return parser.parseTopicMessage(topicMessage)
+    }
+
+
 }
