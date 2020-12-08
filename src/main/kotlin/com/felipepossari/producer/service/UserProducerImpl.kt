@@ -1,11 +1,12 @@
 package com.felipepossari.producer.service
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.felipepossari.persistence.model.UserEntity
+import com.felipepossari.producer.exception.ProducerException
 import com.felipepossari.producer.model.EntityType
 import com.felipepossari.producer.model.EventType
-import com.felipepossari.producer.model.EventType.*
-import com.felipepossari.producer.model.UserMessage
+import com.felipepossari.producer.model.EventType.CREATED
+import com.felipepossari.producer.model.EventType.DELETED
+import com.felipepossari.producer.model.EventType.UPDATE
 import io.micronaut.configuration.kafka.annotation.KafkaClient
 import org.apache.kafka.clients.producer.Producer
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -28,7 +29,7 @@ class UserProducerImpl(private val userTopic: String,
         try {
             log.info("Sending message to kafka. User Id = ${user.id}")
             producer.send(ProducerRecord(userTopic, user.id.toString(), message))
-        } catch (ex: Exception) {
+        } catch (ex: ProducerException) {
             log.error("Error: ", ex)
             return false
         }
@@ -47,7 +48,7 @@ class UserProducerImpl(private val userTopic: String,
         return createTopicMessage(user, DELETED)
     }
 
-    private fun createTopicMessage(user: UserEntity, eventType: EventType): String{
+    private fun createTopicMessage(user: UserEntity, eventType: EventType): String {
         val userMessage = builder.buildUserMessage(user)
         val topicMessage = builder.builTopicMessage(parser.parseUserMessage(userMessage),
                 EntityType.USER,
