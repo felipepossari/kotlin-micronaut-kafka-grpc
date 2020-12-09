@@ -21,3 +21,8 @@ message UserCreateResponse{
   string name = 2;
   string email = 3;
 }
+
+message ErrorResponse {
+  int64 code = 1;
+  string description = 2;
+}
