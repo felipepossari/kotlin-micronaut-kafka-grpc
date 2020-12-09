@@ -1,6 +1,8 @@
 package com.felipepossari.producer.service
 
 import com.felipepossari.persistence.model.UserEntity
+import com.felipepossari.producer.exception.ProducerErrorReason
+import com.felipepossari.producer.exception.ProducerErrorReason.FAILURE_TO_PUBLISH_MESSAGE
 import com.felipepossari.producer.exception.ProducerException
 import com.felipepossari.producer.model.EntityType
 import com.felipepossari.producer.model.EventType
@@ -29,8 +31,8 @@ class UserProducerImpl(private val userTopic: String,
         try {
             log.info("Sending message to kafka. User Id = ${user.id}")
             producer.send(ProducerRecord(userTopic, user.id.toString(), message))
-        } catch (ex: ProducerException) {
-            log.error("Error: ", ex)
+        } catch (ex: Exception) {
+            log.error(FAILURE_TO_PUBLISH_MESSAGE.description, ex)
             return false
         }
         return true
