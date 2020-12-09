@@ -3,6 +3,7 @@ package com.felipepossari.grpc.entrypoint
 import com.felipepossari.KafkaServiceGrpc
 import com.felipepossari.UserCreateRequest
 import com.felipepossari.UserCreateResponse
+import com.felipepossari.grpc.exception.GrpcException
 import com.felipepossari.grpc.model.UserDto
 import com.felipepossari.grpc.service.UserService
 import io.grpc.stub.StreamObserver
@@ -19,9 +20,13 @@ class GrpcEntrypoint(private val service: UserService)
     }
 
     override fun createUser(request: UserCreateRequest, responseObserver: StreamObserver<UserCreateResponse>) {
-        log.info("Creating user")
-        val userDto = UserDto(email = request.email, name = request.name)
-        responseObserver.onNext(service.create(userDto))
-        responseObserver.onCompleted()
+        try {
+            log.info("Creating user")
+            val userDto = UserDto(email = request.email, name = request.name)
+            responseObserver.onNext(service.create(userDto))
+            responseObserver.onCompleted()
+        } catch (ex: GrpcException){
+            responseObserver.onError(ex)
+        }
     }
 }
