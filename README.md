@@ -13,17 +13,17 @@ Project is created with:
 * Kotlin;
 * Postgres;
 * Kafka;
-* GRPC
-* BloomRPC
+* GRPC;
+* BloomRPC;
 	
 ## Setup
 To run this project:
 
 * Clone the project;
-* Execute: ``docker-compose up -d`` 
-* Execute: `` gradle clean build``
-* Execute: `` gradle run``
+* Execute: ``docker-compose up -d``;
+* Execute: `` gradle clean build``;
+* Execute: `` gradle run``;
 * Download the [BloomRPC](https://github.com/uw-labs/bloomrpc);
-* Load the kafka.proto file located in kotlin-micronaut-kafka-grpc\src\main\proto
-* Set the destination to 0.0.0.0:50051
-* Send the request
+* Load the kafka.proto file located in kotlin-micronaut-kafka-grpc\src\main\proto;
+* Set the destination to 0.0.0.0:50051;
+* Send the request;
